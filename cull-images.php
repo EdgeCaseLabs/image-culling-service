@@ -1,7 +1,7 @@
 <?php
 /**
  * Given a directory, rename the most recent image and delete the rest.
- * @author      Wes Thomas <westhomas@edgecaselabs.com>
+ * @author      Wes Thomas <edgecaselabs.com>
  */
 
 //Cull Images Service Settings
