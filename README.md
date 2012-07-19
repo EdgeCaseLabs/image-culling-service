@@ -24,8 +24,8 @@ This is useful for monitoring a series of directories where security feed images
 
 - If you want to call the service more than once every minute, configure the cron service's settings and point your cron job to cron.php:
 
-		// Cron URL
-		$cron_url="http://localhost/cull-images.php";here.
+		// Cron URL here.
+		$cron_url="http://localhost/cull-images.php";
 		// Time interval needed (second).
 		$time_interval=15;
 
