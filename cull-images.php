@@ -4,48 +4,62 @@
  * @author      Wes Thomas <westhomas@edgecaselabs.com>
  */
 
-define('IMAGES_DIR', './images/');
-define('IMAGES_FILTER', '*.jpg');
-define('LATEST_FILE_NAME', IMAGES_DIR . 'image.jpg');
+//Cull Images Service Settings
+
+//Images to include in the search filter
+$IMAGES_FILTER = '*.jpg';
+//Filename to use when renaming the most recent file
+$LATEST_FILE_NAME = 'image.jpg';
+//Directories to include in search
+$IMAGES_DIRS = array('./images1/', './images2/', './images3/');
 
 
 $BREAK = '<br/>';
 
 //fetch files matching filter and note the modified time
-foreach (glob(IMAGES_DIR . IMAGES_FILTER) as $filename){
-    if(is_file($filename) && $filename != LATEST_FILE_NAME) {  // if you want to omit directories 
-        $arrDIR[$filename] = filemtime($filename); 
-    }
-}
-//sort the files in reverse so the most recent file is index=0
-if(count($arrDIR) > 0){
-    if(arsort($arrDIR)){
+foreach ($IMAGES_DIRS as $path){
+    
+    $arrDIR = array();
+    $new_file_name = $path . $LATEST_FILE_NAME;
 
-        $i = 0;
-        foreach ($arrDIR as $key => $value) {
-            echo $key . ' - ';
-            echo date ("F d Y H:i:s", $value) . ' - ';
-            
-            if($i == 0){
-                //the first one is the new latest file
-                echo 'rename';
-                rename($key, LATEST_FILE_NAME);
-            }else{
-                //these files are old; delete them
-                echo 'delete';
-                unlink($key);
+    foreach (glob($path . $IMAGES_FILTER) as $filename){
+        if(is_file($filename) && $filename != $new_file_name) {  // if you want to omit directories 
+            $arrDIR[$filename] = filemtime($filename); 
+        }
+    }
+
+    //sort the files in reverse so the most recent file is index=0
+    if(count($arrDIR) > 0){
+        if(arsort($arrDIR)){
+
+            $i = 0;
+            foreach ($arrDIR as $key => $value) {
+                echo $key . ' - ';
+                echo date ("F d Y H:i:s", $value) . ' - ';
+                
+                if($i == 0){
+                    //the first one is the new latest file
+                    echo 'rename';
+                    rename($key, $new_file_name);
+                }else{
+                    //these files are old; delete them
+                    echo 'delete';
+                    unlink($key);
+                }
+
+                echo $BREAK;
+                $i++;
             }
 
+        }else{
+            echo 'arsort() returned false';
             echo $BREAK;
-            $i++;
         }
-
     }else{
-        echo 'arsort returned false';
+        echo 'no files found matching ' . $path . $IMAGES_FILTER;
+        echo $BREAK;
     }
-}else{
-    echo 'no files found matching ' . IMAGES_DIR . IMAGES_FILTER;
 }
 
-
 ?>
+Done
